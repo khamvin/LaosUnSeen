@@ -25,6 +25,7 @@
 
             <!--Photo-->
             <ImageView
+                android:id="@+id/imvPhoto"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/photo"
                 android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
             <!--User-->
             <EditText
                 android:inputType="text"
-                android:hint="Name :"
+                android:hint="Email :"
                 android:background="@drawable/textfield_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -49,7 +50,7 @@
             <!--Password-->
             <EditText
                 android:inputType="text"
-                android:hint="Name :"
+                android:hint="Password :"
                 android:background="@drawable/textfield_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
