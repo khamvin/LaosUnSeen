@@ -105,10 +105,28 @@ public class RegisterFragment extends Fragment {
         } else {
 //            No space
 
+
+            //alt+enter key : karn sang Method key Rut
+            uploadPhotoToFirebase();
+
+
+
+
         }
 
 
     }
+
+    private void uploadPhotoToFirebase() {
+
+
+
+
+    }
+
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
