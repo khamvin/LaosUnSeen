@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +40,9 @@ public class RegisterFragment extends Fragment {
     private Uri uri;
     private ImageView imageView;
     private boolean aBoolean = true;
-    private String nameString, emailString, passwordString;
+    private String nameString, emailString, passwordString,
+    uidString, pathURLString, myPostString; //control+space mun ja tuem kum tarng lung hai eng
+
 
 
 
@@ -90,8 +93,8 @@ public class RegisterFragment extends Fragment {
 //                                  (1)Keybod  Option+Commance + enter karn lieng code ton mun sai hai long teow eng
 
         nameString = nameEditText.getText().toString().trim();
-        emailString = nameEditText.getText().toString().trim();
-        passwordString = nameEditText.getText().toString().trim();
+        emailString = emailEditText.getText().toString().trim();
+        passwordString = passwordEditText.getText().toString().trim();
 
 
 //        Check Choose Photo
@@ -121,11 +124,8 @@ public class RegisterFragment extends Fragment {
 
 
 
-
-
-
             //alt+enter key : karn sang Method key Rut
-            uploadPhotoToFirebase();
+           uploadPhotoToFirebase();
 
 
 
@@ -136,25 +136,30 @@ public class RegisterFragment extends Fragment {
     }
 
     private void creatAuthentication() {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        Log.d("8AugV1", "Creat Work");
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(emailString, passwordString)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            //Log.d("8AugV1", "Successful");
 
+                            uidString = firebaseAuth.getCurrentUser().getUid(); //code ni man code t hao ja dai kar udid ma
+                            Log.d("8AugV1", "uidString ==>" + uidString);
+                              //Log.wtf("8AugV1", "uidString ==>" + uidString); // tong sai code ni sam lup check logcat
 
                         } else {
                             MyAlert myAlert = new MyAlert(getActivity());
                             myAlert.normalDialog("Can not Register",
                                     "Beacuse ==>" + task.getException().getMessage());
+                           // Log.d("8AugV1", "Error ==> " + task.getException().getMessage());
 
                         }
 
-
                     }
                 });
-
 
 
     }
@@ -171,6 +176,11 @@ public class RegisterFragment extends Fragment {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Toast.makeText(getActivity(), "Succress Upload Photo", Toast.LENGTH_SHORT).show();
 
+                findPathUrlPhoto();
+
+
+
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -181,12 +191,13 @@ public class RegisterFragment extends Fragment {
         });
 
 
+    }   //uploadPhoto
 
+
+    private void findPathUrlPhoto() {
+        
 
     }
-
-
-
 
 
     @Override

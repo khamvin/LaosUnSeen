@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import masterung.androidthai.in.th.laosunseen.R;
 
 public class MainFragment extends Fragment{
@@ -18,7 +20,27 @@ public class MainFragment extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+//        Check Status
+        checkStatus();
+
+
 //        Register Controller
+        registerController();   //code u loum dai ma jark option+commance
+
+    }   // Method Main
+
+    private void checkStatus() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        if (firebaseAuth.getCurrentUser()!=null) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.contentMainFragment, new ServiceFragment())
+                    .commit();
+        }
+
+    }
+
+    private void registerController() {
         TextView textView = getView().findViewById(R.id.txtRegister);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,8 +56,7 @@ public class MainFragment extends Fragment{
 
             }
         });
-
-    }   // Method Main
+    }
 
     @Nullable
     @Override
