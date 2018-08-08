@@ -19,6 +19,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import masterung.androidthai.in.th.laosunseen.MainActivity;
 import masterung.androidthai.in.th.laosunseen.R;
 import masterung.androidthai.in.th.laosunseen.utility.MyAlert;
@@ -29,6 +39,8 @@ public class RegisterFragment extends Fragment {
     private Uri uri;
     private ImageView imageView;
     private boolean aBoolean = true;
+    private String nameString, emailString, passwordString;
+
 
 
     @Override
@@ -77,9 +89,9 @@ public class RegisterFragment extends Fragment {
 //        Get Value From EditText   (0)commance D mun ja copy pai leauy leauy
 //                                  (1)Keybod  Option+Commance + enter karn lieng code ton mun sai hai long teow eng
 
-        String nameString = nameEditText.getText().toString().trim();
-        String emailString = nameEditText.getText().toString().trim();
-        String passwordString = nameEditText.getText().toString().trim();
+        nameString = nameEditText.getText().toString().trim();
+        emailString = nameEditText.getText().toString().trim();
+        passwordString = nameEditText.getText().toString().trim();
 
 
 //        Check Choose Photo
@@ -105,6 +117,12 @@ public class RegisterFragment extends Fragment {
         } else {
 //            No space
 
+            creatAuthentication();
+
+
+
+
+
 
             //alt+enter key : karn sang Method key Rut
             uploadPhotoToFirebase();
@@ -117,7 +135,50 @@ public class RegisterFragment extends Fragment {
 
     }
 
+    private void creatAuthentication() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.createUserWithEmailAndPassword(emailString, passwordString)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+
+                        } else {
+                            MyAlert myAlert = new MyAlert(getActivity());
+                            myAlert.normalDialog("Can not Register",
+                                    "Beacuse ==>" + task.getException().getMessage());
+
+                        }
+
+
+                    }
+                });
+
+
+
+    }
+
     private void uploadPhotoToFirebase() {
+
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference();//code seaum to firebasee
+        StorageReference storageReference1 = storageReference.child("Avata/"+ nameString);
+
+
+        storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getActivity(), "Succress Upload Photo", Toast.LENGTH_SHORT).show();
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Cannont Upload Photo", Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
