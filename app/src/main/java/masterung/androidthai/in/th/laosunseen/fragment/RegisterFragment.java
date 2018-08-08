@@ -26,6 +26,7 @@ public class RegisterFragment extends Fragment{
     //    Explicit
     private Uri uri;
     private ImageView imageView;
+    private boolean aBoolean = true;
 
 
     @Override
@@ -57,11 +58,28 @@ public class RegisterFragment extends Fragment{
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId() == R.id.itemUpload) {
+            uploadProcess(); //Method t sang kuen ma eng Key lut man Click alt+enter Method kor ja sang keun ma eng
+
+
+
             return true;
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void uploadProcess() {
+//        Check Choose Photo
+        if (aBoolean) {
+
+//            None Choose Photo
+
+
+
+        }
+
+
     }
 
     @Override
@@ -70,6 +88,11 @@ public class RegisterFragment extends Fragment{
         if (resultCode == getActivity().RESULT_OK) {
 
             uri = data.getData();
+            aBoolean = false;
+
+
+
+
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
                 Bitmap bitmap1 = bitmap.createScaledBitmap(bitmap, 400, 300, true);
