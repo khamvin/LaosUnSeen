@@ -23,10 +23,14 @@ public class MyAlert {
         builder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();//code ni h hai popup pit pai thar click ok  
+                dialogInterface.dismiss();//code ni h hai popup pit pai thar click ok
 
             }
         });
+
+
+        builder.show(); // code t sung hai popup show
+
 
 
     }
