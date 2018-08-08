@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,7 +23,7 @@ import masterung.androidthai.in.th.laosunseen.MainActivity;
 import masterung.androidthai.in.th.laosunseen.R;
 import masterung.androidthai.in.th.laosunseen.utility.MyAlert;
 
-public class RegisterFragment extends Fragment{
+public class RegisterFragment extends Fragment {
 
     //    Explicit
     private Uri uri;
@@ -41,9 +42,6 @@ public class RegisterFragment extends Fragment{
         photoController();
 
 
-
-
-
     }   // Main Class
 
 
@@ -58,9 +56,8 @@ public class RegisterFragment extends Fragment{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId() == R.id.itemUpload) {
+        if (item.getItemId() == R.id.itemUpload) {
             uploadProcess(); //Method t sang kuen ma eng Key lut man Click alt+enter Method kor ja sang keun ma eng
-
 
 
             return true;
@@ -71,15 +68,42 @@ public class RegisterFragment extends Fragment{
     }
 
     private void uploadProcess() {
+        //control + space
+        EditText nameEditText = getView().findViewById(R.id.edtname);
+        EditText emailEditText = getView().findViewById(R.id.edtEmail);
+        EditText passwordEditText = getView().findViewById(R.id.edtPassword);
+
+
+//        Get Value From EditText   (0)commance D mun ja copy pai leauy leauy
+//                                  (1)Keybod  Option+Commance + enter karn lieng code ton mun sai hai long teow eng
+
+        String nameString = nameEditText.getText().toString().trim();
+        String emailString = nameEditText.getText().toString().trim();
+        String passwordString = nameEditText.getText().toString().trim();
+
+
 //        Check Choose Photo
         if (aBoolean) {
 
 //            None Choose Photo
             MyAlert myAlert = new MyAlert(getActivity());
-            myAlert.normalDialog("None Choose Photo", "Please Choose Photo");//To nung sue si tao tao mun mar jark karn sai "" leo mun kuen ma eng
+            myAlert.normalDialog("None Choose Photo",
+                    "Please Choose Photo");//To nung sue si tao tao mun mar jark karn sai "" leo mun kuen ma eng
+
+//Shift+Clt enter ja dai pik kar eng
+
+        } else if (nameString.isEmpty()|| emailString.isEmpty()|| passwordString.isEmpty()) {
+
+//            Have Space
+            MyAlert myAlert = new MyAlert(getActivity());
+            myAlert.normalDialog("Have Space", "Please Fill All Every Blank");
 
 
 
+
+
+        } else {
+//            No space
 
         }
 
@@ -95,14 +119,10 @@ public class RegisterFragment extends Fragment{
             aBoolean = false;
 
 
-
-
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
                 Bitmap bitmap1 = bitmap.createScaledBitmap(bitmap, 400, 300, true);
                 imageView.setImageBitmap(bitmap1);
-
-
 
 
             } catch (Exception e) {
@@ -110,10 +130,7 @@ public class RegisterFragment extends Fragment{
             }
 
 
-
-
-
-        }else{
+        } else {
             Toast.makeText(getActivity(), "Please Chose Photo", Toast.LENGTH_SHORT).show();
 
         }
@@ -136,7 +153,7 @@ public class RegisterFragment extends Fragment{
 
     private void createToolbar() {
         Toolbar toolbar = getView().findViewById(R.id.toolbarRegister);
-        ((MainActivity)getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("Register");
         ((MainActivity) getActivity()).getSupportActionBar().setSubtitle("Please Choose Photo and Fill All Blank");
         ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
@@ -147,7 +164,6 @@ public class RegisterFragment extends Fragment{
                 getActivity().getSupportFragmentManager().popBackStack();
             }
         });
-
 
 
         setHasOptionsMenu(true);
