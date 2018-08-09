@@ -221,7 +221,7 @@ public class RegisterFragment extends Fragment {
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getContext(), "Cannont Upload Photo", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
-                
+
             }
         });
 
