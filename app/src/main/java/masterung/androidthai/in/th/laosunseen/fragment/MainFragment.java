@@ -124,6 +124,7 @@ public class MainFragment extends Fragment{
     private void moveToService() {
 
         startActivity(new Intent(getActivity(), ServiceActivity.class));//code ny sai vai start Activity
+        getActivity().finish();
 
 
     }
