@@ -30,6 +30,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+
 import masterung.androidthai.in.th.laosunseen.MainActivity;
 import masterung.androidthai.in.th.laosunseen.R;
 import masterung.androidthai.in.th.laosunseen.utility.MyAlert;
@@ -178,11 +180,25 @@ public class RegisterFragment extends Fragment {
 
                 findPathUrlPhoto();
 
+                creatPost();
+
 
 
 
 
             }
+
+            private void creatPost() {
+                ArrayList<String> stringArrayList = new ArrayList<>(); //ny man karn sang code to pea pen raly list code ni mun ja to teo auto hai
+                stringArrayList.add("Hello");
+                myPostString = stringArrayList.toString();
+                Log.d("9AUGV1", "myPost ==>" + myPostString);
+
+
+
+
+            }
+
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -195,9 +211,39 @@ public class RegisterFragment extends Fragment {
 
 
     private void findPathUrlPhoto() {
-        
 
-    }
+        //code ny man code kien kum sung duk jub erro
+
+        try {
+
+            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance(); //instanece man to tean kong sout kum sung
+            StorageReference storageReference = firebaseStorage.getReference();
+            final String [] urlStrings = new  String[1];
+
+            storageReference.child("Avata").child(nameString)
+                    .getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {  //contrl+space ja dai override kuen auto
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            urlStrings[0] = uri.toString();
+                            pathURLString = urlStrings[0];
+                            Log.d("9AUGV1", "pathURL ==>" + pathURLString);
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("9AUGV1", "Error ==>" + e.toString());
+                }
+            });
+        } catch (Exception e ) {
+            e.printStackTrace();
+        }
+
+
+
+    }//findPath
 
 
     @Override
