@@ -1,5 +1,6 @@
 package masterung.androidthai.in.th.laosunseen.fragment;
 
+import android.mtp.MtpConstants;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,51 +25,39 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.cert.Extension;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import masterung.androidthai.in.th.laosunseen.MainActivity;
 import masterung.androidthai.in.th.laosunseen.R;
+import masterung.androidthai.in.th.laosunseen.utility.MyAlert;
 
 
+public class ServiceFragment extends Fragment{
 
-
-public class ServiceFragment extends Fragment  {
-    //code ny man code pa kar to pea
     private String nameString, currentPostString, uidString;
-
-    //code ny man karn sang to pea jai jub Log cat puea check erro
-    private String tag = "10AUGV1";
-
-
-
+    private String tag = "10AugV1";
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        findMyMe();
 
+//        Post Controller
+        postController();
 
-        FindMyMe();
+    }   // Main Method
 
-//        Post Controler
-
-
-        postControler();
-
-
-    }     //Main Method
-
-    private void FindMyMe() {
+    private void findMyMe() {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         uidString = firebaseAuth.getCurrentUser().getUid();
-        Log.d(tag, "uid ==>" + uidString);
-
+        Log.d(tag, "uid ==> " + uidString);
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("User").child(uidString);
-
-
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -75,15 +65,10 @@ public class ServiceFragment extends Fragment  {
 
                 Map map = (Map) dataSnapshot.getValue();
                 nameString = String.valueOf(map.get("nameString"));
-                currentPostString = String.valueOf(map.get("myPosting"));
+                currentPostString = String.valueOf(map.get("myPostString"));
                 Log.d(tag, "Name ==> " + nameString);
-                Log.d(tag, "currentPost ==>" + currentPostString);
-
-               // Toast.makeText(getContext(), "Name ==> " + nameString, Toast.LENGTH_SHORT).show();
-
-
-
-
+                Log.d(tag, "currentPost ==> " + currentPostString);
+                Toast.makeText(getActivity(),"Name ==> " + nameString, Toast.LENGTH_SHORT).show();
 
             }
 
@@ -93,32 +78,59 @@ public class ServiceFragment extends Fragment  {
             }
         });
 
-
-
-
     }
 
-    // Ta sy aw button teow t 1 leo click Control+Space = karn sang Overide
-    private void postControler() {
+    private void postController() {
         Button button = getView().findViewById(R.id.btnPost);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-
-
+                EditText editText = getView().findViewById(R.id.edtPost);
+                String postString = editText.getText().toString().trim();
+                if (postString.isEmpty()) {
+                    MyAlert myAlert = new MyAlert(getActivity());
+                    myAlert.normalDialog("Post False",
+                            "Please Type on Post");
+                } else {
+                    editCurrentPost(postString);
+                    editText.setText("");
+                }
             }
         });
+    }
+
+    private void editCurrentPost(String postString) {
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference()
+                .child("User").child(uidString);
+
+        Map<String, Object> stringObjectMap = new HashMap<>();
+        stringObjectMap.put("myPostString", changeMyData(postString));
+        databaseReference.updateChildren(stringObjectMap);
+
+
+    }
+
+    private String changeMyData(String postString) {
+
+        String resultString = null;
+
+        resultString = currentPostString.substring(1, currentPostString.length() - 1);
+        String[] strings = resultString.split(",");
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        for (int i=0; i<strings.length; i+=1) {
+            stringArrayList.add(strings[i]);
+        }
+        stringArrayList.add(postString);
+        return stringArrayList.toString();
     }
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_service, container,false);
+        View view = inflater.inflate(R.layout.fragment_service, container, false);
         return view;
-
     }
 }
