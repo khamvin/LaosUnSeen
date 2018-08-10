@@ -127,6 +127,7 @@ public class MainFragment extends Fragment{
         getActivity().finish();
 
 
+
     }
 
     private void registerController() {
